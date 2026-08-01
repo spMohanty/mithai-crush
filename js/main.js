@@ -23,7 +23,10 @@ function loadProgress() {
     return { unlocked: 1, stars: {}, best: {}, muted: false, sawTutorial: false, ...p };
   } catch { return { unlocked: 1, stars: {}, best: {}, muted: false, sawTutorial: false }; }
 }
-function saveProgress() { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }
+function saveProgress() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }
+  catch { /* storage unavailable (private mode / sandboxed embed) — play on without saving */ }
+}
 const progress = loadProgress();
 
 // ---------- state ----------
