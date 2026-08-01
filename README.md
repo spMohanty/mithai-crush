@@ -47,3 +47,9 @@ css/style.css  Diwali-night visual identity
 ```
 
 Dev console helper: `window.__mithai` (state, validMoves(), swap(a,b), startLevel(n)).
+
+## E2E harnesses (optional)
+
+`e2e/swipe-test.mjs` drives real CDP touch gestures against the live site; `e2e/audio-test.mjs`
+measures every sound effect through the mix bus (run a local server first). Both need
+`npm i -D puppeteer-core` and a local Chrome.
