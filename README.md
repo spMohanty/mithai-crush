@@ -53,3 +53,13 @@ Dev console helper: `window.__mithai` (state, validMoves(), swap(a,b), startLeve
 `e2e/swipe-test.mjs` drives real CDP touch gestures against the live site; `e2e/audio-test.mjs`
 measures every sound effect through the mix bus (run a local server first). Both need
 `npm i -D puppeteer-core` and a local Chrome.
+
+## Sound credits (all CC0 / public domain)
+
+- [Kenney.nl](https://kenney.nl) — Interface Sounds, Impact Sounds, Music Jingles packs
+- [25 CC0 bang / firework SFX](https://opengameart.org/content/25-cc0-bang-firework-sfx) (OpenGameArt)
+- [100 CC0 SFX](https://opengameart.org/content/100-cc0-sfx) by rubberduck (OpenGameArt)
+- [Swishes Sound Pack](https://opengameart.org/content/swishes-sound-pack) (OpenGameArt)
+
+CC0 requires no attribution — credited with thanks anyway. If samples fail to load
+(e.g. the single-file bundle), the game falls back to its built-in synth engine.

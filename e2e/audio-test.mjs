@@ -2,7 +2,7 @@
 // and throws no errors. Runs against the LOCAL server (pre-push code).
 import puppeteer from 'puppeteer-core';
 
-const URL = 'http://127.0.0.1:8341/index.html?audiotest=' + Date.now();
+const URL = (process.env.TEST_URL || 'http://127.0.0.1:8341/index.html') + '?audiotest=' + Date.now();
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const browser = await puppeteer.launch({
@@ -22,6 +22,11 @@ try {
     m.initAudio();
     const { ctx, bus } = m.getAudioGraph();
     if (ctx.state !== 'running') await ctx.resume();
+    // wait for sample buffers to decode
+    const t0 = performance.now();
+    while (m.loadedSamples().length < 15 && performance.now() - t0 < 10000) {
+      await new Promise((r) => setTimeout(r, 150));
+    }
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 2048;
     bus.connect(analyser);
@@ -57,10 +62,11 @@ try {
     out.push(await measure('shuffle', () => m.sfx.shuffle(), 800));
     out.push(await measure('lose', () => m.sfx.lose(), 1300));
     out.push(await measure('win', () => m.sfx.win(), 2200));
-    return { ctxState: ctx.state, out };
+    return { ctxState: ctx.state, out, samples: m.loadedSamples().sort() };
   });
 
   console.log('ctx state:', results.ctxState);
+  console.log(`samples loaded (${results.samples.length}):`, results.samples.join(' '));
   let ok = true;
   for (const r of results.out) {
     const pass = r.peak > 0.01;
