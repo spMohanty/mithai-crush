@@ -205,31 +205,47 @@ function attachInput(el) {
     initAudio();
     const cell = elCell(el);
     pointer = { id: e.pointerId, startX: e.clientX, startY: e.clientY, cellIdx: cell, el };
-    el.setPointerCapture?.(e.pointerId);
+    try { el.setPointerCapture?.(e.pointerId); } catch { /* inactive pointer id — capture is best-effort */ }
   });
   el.addEventListener('pointermove', (e) => {
     if (!pointer || pointer.id !== e.pointerId || state.busy || state.over) return;
-    const dx = e.clientX - pointer.startX;
-    const dy = e.clientY - pointer.startY;
-    const cellPx = els.board.clientWidth / SIZE;
-    const threshold = cellPx * 0.35;
-    if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) return;
-    const [r, c] = rc(pointer.cellIdx);
-    let target = null;
-    if (Math.abs(dx) > Math.abs(dy)) target = c + Math.sign(dx) >= 0 && c + Math.sign(dx) < SIZE ? idx(r, c + Math.sign(dx)) : null;
-    else target = r + Math.sign(dy) >= 0 && r + Math.sign(dy) < SIZE ? idx(r + Math.sign(dy), c) : null;
+    const target = swipeTarget(pointer, e.clientX, e.clientY);
+    if (target === undefined) return; // hasn't travelled far enough yet
     const from = pointer.cellIdx;
     pointer = null;
     if (target !== null) attemptSwap(from, target);
   });
   el.addEventListener('pointerup', (e) => {
     if (!pointer || pointer.id !== e.pointerId) { pointer = null; return; }
-    const cell = pointer.cellIdx;
+    const ptr = pointer;
     pointer = null;
     if (state.busy || state.over) return;
-    handleTap(cell);
+    // Fast flicks can reach pointerup before any pointermove crossed the
+    // threshold — decide swipe-vs-tap from the final position, not just moves.
+    const target = swipeTarget(ptr, e.clientX, e.clientY);
+    if (target !== undefined) {
+      if (target !== null) attemptSwap(ptr.cellIdx, target);
+      return;
+    }
+    handleTap(ptr.cellIdx);
   });
   el.addEventListener('pointercancel', () => { pointer = null; });
+}
+
+// undefined = not a swipe (too short); null = swipe off the board; number = target cell
+function swipeTarget(ptr, x, y) {
+  const dx = x - ptr.startX;
+  const dy = y - ptr.startY;
+  const cellPx = els.board.clientWidth / SIZE;
+  const threshold = cellPx * 0.3;
+  if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) return undefined;
+  const [r, c] = rc(ptr.cellIdx);
+  if (Math.abs(dx) > Math.abs(dy)) {
+    const nc = c + Math.sign(dx);
+    return nc >= 0 && nc < SIZE ? idx(r, nc) : null;
+  }
+  const nr = r + Math.sign(dy);
+  return nr >= 0 && nr < SIZE ? idx(nr, c) : null;
 }
 function elCell(el) {
   // derive current grid cell from CSS vars (they always hold the logical position)

@@ -38,7 +38,11 @@ body {
   overflow-x: hidden;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior-y: none;
 }
+
+.btn { touch-action: manipulation; }
 
 /* ---------- atmosphere ---------- */
 .sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
