@@ -327,6 +327,7 @@ async function settleTurn() {
   if (state.movesLeft <= 0) { loseFlow(); return; }
   const res = ensurePlayable(state.board, state.rng);
   if (res.shuffled) {
+    sfx.shuffle();
     toast('Koi chaal nahi — phir se milaya!', true);
     await wait(700);
     renderBoard();
