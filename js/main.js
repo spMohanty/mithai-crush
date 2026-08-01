@@ -430,9 +430,11 @@ async function animateStep(step, n) {
     el.remove();
   }
 
-  // created specials appear
+  // created specials appear (the tile they replace is consumed by the match)
   for (const cr of step.created) {
     const [r, c] = rc(cr.i);
+    const stale = [...tileEls.entries()].find(([, e]) => elCell(e) === cr.i);
+    if (stale) { stale[1].remove(); tileEls.delete(stale[0]); }
     const el = makeTileEl(cr.tile, r, c);
     el.classList.add('spawnin', 'boomflash');
     setTimeout(() => el.classList.remove('spawnin', 'boomflash'), 400);
@@ -460,6 +462,12 @@ async function animateStep(step, n) {
     }
   }
   await wait(step.falls.length || step.spawns.length ? 330 : 60);
+
+  // reconciliation sweep: drop any element whose tile no longer exists on the board
+  const liveIds = new Set(state.board.cells.filter(Boolean).map((t) => t.id));
+  for (const [id, el] of [...tileEls.entries()]) {
+    if (!liveIds.has(id)) { el.remove(); tileEls.delete(id); }
+  }
   updateHUD();
 }
 
