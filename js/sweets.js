@@ -92,7 +92,7 @@ function katliSVG() {
 function jamunSVG() {
   return `
   <ellipse cx="50" cy="82" rx="30" ry="8" fill="#92400E" opacity="0.5"/>
-  <circle cx="50" cy="50" r="34" fill="url(#g-jamun)"/>
+  <circle cx="50" cy="50" r="34" fill="url(#g-jamun)" stroke="#D97706" stroke-width="2" stroke-opacity="0.55"/>
   <ellipse cx="38" cy="36" rx="13" ry="8" fill="#FDE68A" opacity="0.45" transform="rotate(-20 38 36)"/>
   <circle cx="60" cy="66" r="2.5" fill="#FBBF24" opacity="0.5"/>
   <rect x="44" y="16" width="7" height="3" rx="1.5" fill="#4ADE80" transform="rotate(-18 47 17)"/>
@@ -155,28 +155,41 @@ export function chakriSVG() {
 }
 
 function rocketOverlay(vertical) {
+  // Bold stripes across the sweet in the clear direction + a patakha-rocket badge.
   const rot = vertical ? '' : ' transform="rotate(90 50 50)"';
   return `
-  <g class="rocket-pulse"${rot}>
-    <rect x="45" y="6" width="10" height="88" rx="5" fill="#FFD700" opacity="0.28"/>
-    <path d="M50 2 L60 20 L40 20 Z" fill="#FF5722"/>
-    <path d="M50 98 L60 80 L40 80 Z" fill="#FF5722"/>
-    <path d="M50 7 L56 18 L44 18 Z" fill="#FFC107"/>
-    <path d="M50 93 L56 82 L44 82 Z" fill="#FFC107"/>
+  <g${rot}>
+    <g class="rocket-pulse">
+      <rect x="28" y="8" width="10" height="84" rx="5" fill="#FFFFFF" opacity="0.92" stroke="rgba(190,24,93,0.5)" stroke-width="1.5"/>
+      <rect x="45" y="4" width="10" height="92" rx="5" fill="#FFFFFF" opacity="0.92" stroke="rgba(190,24,93,0.5)" stroke-width="1.5"/>
+      <rect x="62" y="8" width="10" height="84" rx="5" fill="#FFFFFF" opacity="0.92" stroke="rgba(190,24,93,0.5)" stroke-width="1.5"/>
+      <path d="M33 8 L38 -2 L43 8 Z" fill="#FFD700" transform="translate(-5 4)"/>
+      <path d="M50 0 L56 10 L44 10 Z" fill="#FFD700"/>
+      <path d="M67 8 L72 -2 L77 8 Z" fill="#FFD700" transform="translate(-5 4)"/>
+    </g>
+    <g transform="translate(70 2) scale(0.34)">
+      <rect x="36" y="18" width="20" height="46" rx="9" fill="#E11D48" stroke="#7F1D1D" stroke-width="3"/>
+      <path d="M46 -8 L62 22 L30 22 Z" fill="#FFC107" stroke="#B45309" stroke-width="3"/>
+      <rect x="42" y="64" width="8" height="18" fill="#8D6E63"/>
+      <path d="M30 70 Q46 88 62 70" stroke="#FF9933" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </g>
   </g>`;
 }
 
 function anaarOverlay() {
+  // Whole-tile flame ring + a fat fuse: unmistakably a bomb about to go off.
   return `
+  <circle cx="50" cy="52" r="45" fill="#FF9933" opacity="0.14"/>
+  <g class="anaar-spin" style="transform-origin:50px 52px">
+    <circle cx="50" cy="52" r="43" fill="none" stroke="#FFD700" stroke-width="5"
+      stroke-dasharray="10 9" stroke-linecap="round"/>
+  </g>
   <g class="anaar-flicker">
-    <path d="M60 96 L84 96 L80 74 L64 74 Z" fill="#B45327" stroke="#7C2D12" stroke-width="2"/>
-    <rect x="62" y="70" width="20" height="6" rx="3" fill="#92400E"/>
-    <path d="M72 68 Q71 60 74 56" stroke="#166534" stroke-width="2.5" fill="none"/>
-    <g stroke="#FFD700" stroke-width="2.5" stroke-linecap="round">
-      <path d="M74 54 L74 44"/><path d="M74 54 L66 46"/><path d="M74 54 L82 46"/>
-      <path d="M74 54 L62 52"/><path d="M74 54 L86 52"/>
+    <path d="M50 10 Q48 -2 58 -4" stroke="#166534" stroke-width="4" fill="none" stroke-linecap="round" transform="translate(0 8)"/>
+    <g transform="translate(58 2)">
+      <path d="M0 0 L4 8 L13 8 L6 13 L9 22 L0 16 L-9 22 L-6 13 L-13 8 L-4 8 Z" fill="#FFD700"/>
+      <circle r="3.5" cy="8" fill="#FFF7ED"/>
     </g>
-    <circle cx="74" cy="54" r="3" fill="#FFF7ED"/>
   </g>`;
 }
 

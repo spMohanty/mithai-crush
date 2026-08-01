@@ -20,7 +20,7 @@
   --dabba-2: #5F120A;
   --font-display: 'Modak', 'Baloo 2', system-ui, sans-serif;
   --font-ui: 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
-  --cell-pad: 8%;
+  --cell-pad: 6.5%;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -383,6 +383,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 .chakri-spin { animation: chakriSpin 2.8s linear infinite; }
 .rocket-pulse { animation: softPulse 1.1s ease-in-out infinite; }
 .anaar-flicker { animation: softPulse 0.7s ease-in-out infinite alternate; }
+.anaar-spin { animation: chakriSpin 6s linear infinite; }
 
 /* ---------- fx ---------- */
 .floatie {

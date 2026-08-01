@@ -659,5 +659,6 @@ window.__mithai = {
   swap: (a, b) => attemptSwap(a, b),
   startLevel: (id) => startLevel(LEVELS.find((l) => l.id === id)),
   render: () => { renderBoard(); renderChashni(); updateHUD(); },
+  settle: () => settleTurn(),
   rc, idx,
 };
