@@ -19,6 +19,39 @@ export const SWEET_NAMES = {
   jamun: 'Gulab Jamun', barfi: 'Barfi', samosa: 'Samosa',
 };
 
+// All gradients live in ONE always-rendered defs sprite (see injectDefs) —
+// gradients defined inside display:none subtrees break their references in Chrome.
+export const GRADIENT_DEFS = `
+  <radialGradient id="g-laddoo" cx="38%" cy="32%" r="75%">
+    <stop offset="0%" stop-color="#FDBA74"/><stop offset="55%" stop-color="#F97316"/><stop offset="100%" stop-color="#C2410C"/>
+  </radialGradient>
+  <linearGradient id="g-katli" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#F5F5F4"/><stop offset="55%" stop-color="#D6D3D1"/><stop offset="100%" stop-color="#A8A29E"/>
+  </linearGradient>
+  <linearGradient id="g-vark" x1="0" y1="0" x2="1" y2="0.4">
+    <stop offset="0%" stop-color="#FFFFFF"/><stop offset="45%" stop-color="#C0C0C8"/><stop offset="60%" stop-color="#F8FAFC"/><stop offset="100%" stop-color="#9CA3AF"/>
+  </linearGradient>
+  <radialGradient id="g-jamun" cx="36%" cy="30%" r="80%">
+    <stop offset="0%" stop-color="#B45309"/><stop offset="55%" stop-color="#7C2D12"/><stop offset="100%" stop-color="#431407"/>
+  </radialGradient>
+  <linearGradient id="g-barfi" x1="0" y1="0" x2="0.3" y2="1">
+    <stop offset="0%" stop-color="#FBCFE8"/><stop offset="60%" stop-color="#F472B6"/><stop offset="100%" stop-color="#DB2777"/>
+  </linearGradient>
+  <linearGradient id="g-barfivark" x1="0" y1="0" x2="1" y2="0.2">
+    <stop offset="0%" stop-color="#FFFFFF"/><stop offset="50%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#F9FAFB"/>
+  </linearGradient>
+  <linearGradient id="g-samosa" x1="0.2" y1="0" x2="0.8" y2="1">
+    <stop offset="0%" stop-color="#FDE68A"/><stop offset="45%" stop-color="#E9A23B"/><stop offset="100%" stop-color="#B45309"/>
+  </linearGradient>`;
+
+export function injectDefs(doc = document) {
+  if (doc.getElementById('mithai-defs')) return;
+  const holder = doc.createElement('div');
+  holder.innerHTML = `<svg id="mithai-defs" aria-hidden="true" focusable="false"
+    style="position:absolute;width:0;height:0;overflow:hidden"><defs>${GRADIENT_DEFS}</defs></svg>`;
+  doc.body.prepend(holder.firstElementChild);
+}
+
 const boondi = (cx, cy, r, fill, op = 1) =>
   `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" opacity="${op}"/>`;
 
@@ -31,9 +64,6 @@ function laddooSVG() {
   ];
   for (const [x, y, f] of spots) dots += boondi(x, y, 4.6, f, 0.9);
   return `
-  <defs><radialGradient id="g-laddoo" cx="38%" cy="32%" r="75%">
-    <stop offset="0%" stop-color="#FDBA74"/><stop offset="55%" stop-color="#F97316"/><stop offset="100%" stop-color="#C2410C"/>
-  </radialGradient></defs>
   <circle cx="50" cy="52" r="36" fill="url(#g-laddoo)"/>
   ${dots}
   <ellipse cx="38" cy="34" rx="14" ry="9" fill="#FFF7ED" opacity="0.35" transform="rotate(-24 38 34)"/>
@@ -53,14 +83,6 @@ function jalebiSVG() {
 
 function katliSVG() {
   return `
-  <defs>
-    <linearGradient id="g-katli" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#F5F5F4"/><stop offset="55%" stop-color="#D6D3D1"/><stop offset="100%" stop-color="#A8A29E"/>
-    </linearGradient>
-    <linearGradient id="g-vark" x1="0" y1="0" x2="1" y2="0.4">
-      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="45%" stop-color="#C0C0C8"/><stop offset="60%" stop-color="#F8FAFC"/><stop offset="100%" stop-color="#9CA3AF"/>
-    </linearGradient>
-  </defs>
   <polygon points="50,9 91,50 50,91 9,50" fill="url(#g-katli)" stroke="#78716C" stroke-width="1.5"/>
   <polygon points="50,16 84,50 50,84 16,50" fill="url(#g-vark)" opacity="0.85"/>
   <polygon points="50,16 84,50 67,67 33,33" fill="#FFFFFF" opacity="0.25"/>
@@ -69,9 +91,6 @@ function katliSVG() {
 
 function jamunSVG() {
   return `
-  <defs><radialGradient id="g-jamun" cx="36%" cy="30%" r="80%">
-    <stop offset="0%" stop-color="#B45309"/><stop offset="55%" stop-color="#7C2D12"/><stop offset="100%" stop-color="#431407"/>
-  </radialGradient></defs>
   <ellipse cx="50" cy="82" rx="30" ry="8" fill="#92400E" opacity="0.5"/>
   <circle cx="50" cy="50" r="34" fill="url(#g-jamun)"/>
   <ellipse cx="38" cy="36" rx="13" ry="8" fill="#FDE68A" opacity="0.45" transform="rotate(-20 38 36)"/>
@@ -82,14 +101,6 @@ function jamunSVG() {
 
 function barfiSVG() {
   return `
-  <defs>
-    <linearGradient id="g-barfi" x1="0" y1="0" x2="0.3" y2="1">
-      <stop offset="0%" stop-color="#FBCFE8"/><stop offset="60%" stop-color="#F472B6"/><stop offset="100%" stop-color="#DB2777"/>
-    </linearGradient>
-    <linearGradient id="g-barfivark" x1="0" y1="0" x2="1" y2="0.2">
-      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="50%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#F9FAFB"/>
-    </linearGradient>
-  </defs>
   <rect x="16" y="16" width="68" height="68" rx="10" fill="url(#g-barfi)" stroke="#BE185D" stroke-width="1.5"/>
   <rect x="16" y="16" width="68" height="22" rx="10" fill="url(#g-barfivark)" opacity="0.9"/>
   <rect x="16" y="30" width="68" height="8" fill="#F9A8D4" opacity="0.6"/>
@@ -101,9 +112,6 @@ function barfiSVG() {
 
 function samosaSVG() {
   return `
-  <defs><linearGradient id="g-samosa" x1="0.2" y1="0" x2="0.8" y2="1">
-    <stop offset="0%" stop-color="#FDE68A"/><stop offset="45%" stop-color="#E9A23B"/><stop offset="100%" stop-color="#B45309"/>
-  </linearGradient></defs>
   <path d="M50 10 Q54 10 56 15 L87 72 Q90 78 84 80 L16 80 Q10 78 13 72 L44 15 Q46 10 50 10 Z"
         fill="url(#g-samosa)" stroke="#92400E" stroke-width="2"/>
   <path d="M50 14 L50 78" stroke="#C2410C" stroke-width="2" opacity="0.4"/>

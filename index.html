@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mithai Crush — Ek Dum Desi Match-3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Modak&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='55' r='38' fill='%23F97316'/><circle cx='38' cy='42' r='6' fill='%23FDBA74'/><circle cx='58' cy='50' r='6' fill='%23FDBA74'/><circle cx='45' cy='62' r='6' fill='%23EA580C'/></svg>">
+</head>
+<body>
+
+<div class="sky">
+  <div class="rangoli rangoli-a"></div>
+  <div class="rangoli rangoli-b"></div>
+  <div class="grain"></div>
+</div>
+
+<!-- Marigold toran garland -->
+<svg class="toran" viewBox="0 0 800 64" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+  <defs>
+    <g id="genda">
+      <circle r="11" fill="#E8730C"/>
+      <circle r="8" fill="#F59E0B"/>
+      <circle r="4.5" fill="#FBBF24"/>
+      <circle r="1.8" fill="#B45309"/>
+    </g>
+    <g id="patta">
+      <path d="M0 0 Q7 10 0 22 Q-7 10 0 0" fill="#2E7D32"/>
+      <path d="M0 2 L0 19" stroke="#1B5E20" stroke-width="1"/>
+    </g>
+  </defs>
+  <path class="toran-string" d="M-10 8 Q100 46 200 30 Q300 14 400 34 Q500 54 600 30 Q700 8 810 24"
+        fill="none" stroke="#8D6E1F" stroke-width="3"/>
+  <g class="toran-items"></g>
+</svg>
+
+<main>
+  <!-- ============ TITLE ============ -->
+  <section id="screen-title" class="screen active">
+    <div class="title-wrap">
+      <div class="title-sweets-row" id="title-sweets-top"></div>
+      <h1 class="logo"><span class="logo-mithai">Mithai</span><span class="logo-crush">CRUSH</span></h1>
+      <p class="tagline">एक दम देसी match&#8209;3!</p>
+      <button id="btn-play" class="btn btn-big btn-gold">KHELO <span class="btn-arrow">▶</span></button>
+      <p class="title-note">Mithai milao · Patakhe phodo · Sheher ghumo</p>
+    </div>
+    <div class="diya-row" aria-hidden="true">
+      <div class="diya"><div class="flame"></div></div>
+      <div class="diya"><div class="flame"></div></div>
+      <div class="diya"><div class="flame"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ YATRA MAP ============ -->
+  <section id="screen-map" class="screen">
+    <header class="map-head">
+      <button class="btn btn-round btn-back" data-nav="title" aria-label="Back">←</button>
+      <h2 class="map-title">Mithai <span>Yatra</span></h2>
+      <button class="btn btn-round btn-mute" aria-label="Mute">🔔</button>
+    </header>
+    <div class="map-scroll">
+      <ol id="yatra" class="yatra"></ol>
+    </div>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="screen-game" class="screen">
+    <header class="game-head">
+      <button class="btn btn-round btn-back" data-nav="map" aria-label="Back to map">←</button>
+      <div class="hud-chip hud-level">
+        <span class="hud-label" id="hud-city">Mumbai</span>
+        <span class="hud-sub" id="hud-levelno">Level 1</span>
+      </div>
+      <div class="hud-chip hud-moves">
+        <span class="hud-big" id="hud-moves">20</span>
+        <span class="hud-sub">chaalein</span>
+      </div>
+      <div class="hud-chip hud-goal" id="hud-goal"></div>
+      <button class="btn btn-round btn-mute" aria-label="Mute">🔔</button>
+    </header>
+
+    <div class="score-row">
+      <div class="score-label">Score</div>
+      <div class="score-value" id="hud-score">0</div>
+      <div class="star-track" id="star-track">
+        <div class="star-fill" id="star-fill"></div>
+        <span class="track-star s1">★</span><span class="track-star s2">★</span><span class="track-star s3">★</span>
+      </div>
+    </div>
+
+    <div class="dabba">
+      <div class="dabba-lid-tag">॥ शुभ मीठा ॥</div>
+      <div class="board-frame">
+        <div id="chashni-layer" class="chashni-layer"></div>
+        <div id="board" class="board"></div>
+        <div id="fx-layer" class="fx-layer"></div>
+      </div>
+    </div>
+    <div id="combo-layer" class="combo-layer"></div>
+  </section>
+</main>
+
+<!-- ============ OVERLAY ============ -->
+<div id="overlay" class="overlay hidden">
+  <div class="overlay-card" id="overlay-card"></div>
+</div>
+<div id="petal-layer" class="petal-layer" aria-hidden="true"></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
