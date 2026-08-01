@@ -229,6 +229,7 @@ function attachInput(el) {
     if (state.busy || state.over) return;
     handleTap(cell);
   });
+  el.addEventListener('pointercancel', () => { pointer = null; });
 }
 function elCell(el) {
   // derive current grid cell from CSS vars (they always hold the logical position)

@@ -355,6 +355,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 /* ---------- tiles ---------- */
 .board { z-index: 10; }
 
+.board { touch-action: none; }
 .tile {
   position: absolute; left: 0; top: 0;
   width: 12.5%; height: 12.5%;
@@ -363,6 +364,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   cursor: pointer;
   will-change: transform;
   z-index: 10;
+  touch-action: none; /* without this, phones treat swipes as page scroll and never deliver pointermove */
 }
 .tile.dragging, .tile.swappingz { z-index: 20; }
 
