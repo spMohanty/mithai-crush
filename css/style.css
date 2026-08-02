@@ -239,7 +239,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 .hud-goal { flex: 1.6; flex-direction: row; gap: 10px; }
 
 .hud-label { font-weight: 800; font-size: 1.02rem; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.hud-sub { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
+.hud-sub { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .hud-big {
   font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; line-height: 1;
   color: var(--turmeric); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
@@ -459,6 +459,8 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 
 .overlay-card {
   width: min(92vw, 400px);
+  max-height: min(86dvh, 640px);
+  overflow-y: auto;
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(255, 220, 150, 0.25), transparent 50%),
     linear-gradient(170deg, #FFF3DC, #FFE3B3);
@@ -494,6 +496,36 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 .tut-row { display: flex; align-items: center; gap: 12px; text-align: left; margin: 10px 0; font-weight: 700; }
 .tut-row svg { width: 40px; height: 40px; flex: 0 0 auto; }
 .tut-row .tut-emoji { font-size: 1.7rem; flex: 0 0 40px; text-align: center; }
+
+/* Title progress line */
+.title-progress { color: var(--turmeric); font-weight: 700; font-size: 0.95rem;
+  margin-top: 10px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); }
+.title-progress:empty { display: none; }
+
+/* Map subtitle */
+.map-sub { width: min(560px, 94vw); text-align: center; font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.04em; opacity: 0.78; margin: -2px auto 8px; }
+.map-sub .star { color: var(--turmeric); }
+
+/* Goal panel — cream-card inset shared by goal card + tutorial */
+.goal-panel { background: rgba(122, 30, 60, 0.08); border: 2px dashed rgba(122, 30, 60, 0.35);
+  border-radius: 14px; padding: 10px 14px; margin: 10px 0 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.goal-panel-head { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; opacity: 0.6; }
+.goal-panel-row { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.05rem; }
+.goal-panel-row svg { width: 30px; height: 30px; }
+.goal-panel-row .goal-icon { font-size: 1.3rem; }
+.goal-panel-moves { font-weight: 700; opacity: 0.75; font-size: 0.9rem; }
+.goal-panel-new { font-size: 0.85rem; font-weight: 700; color: #9D174D; margin-top: 6px; text-align: left; }
+
+.ov-flavor { font-weight: 600; font-style: italic; opacity: 0.8; margin: 4px 0 0; }
+.ov-shout { font-size: clamp(2.4rem, 10vw, 3.3rem); transform: rotate(-2deg); line-height: 1; }
+.ov-needline { font-weight: 800; color: #9A3412; margin: 4px 0; }
+.ov-sub small { font-weight: 600; opacity: 0.7; }
+
+.btn:focus-visible { outline: 3px solid var(--turmeric); outline-offset: 3px; }
+.ynode:focus-visible { outline: 3px solid var(--turmeric); outline-offset: 2px; }
 
 /* ============================================================
    BUTTONS
@@ -625,11 +657,13 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
    RESPONSIVE + MOTION
    ============================================================ */
 @media (max-width: 560px) {
-  .game-head { flex-wrap: wrap; }
-  .hud-level { order: 1; flex: 1 1 34%; }
-  .hud-moves { order: 2; }
-  .hud-goal { order: 4; flex: 1 1 100%; justify-content: center; }
-  .btn-back { order: 0; } .game-head .btn-mute { order: 3; }
+  /* Row 1: navigation + identity. Row 2: the per-turn glance pair (moves + goal). */
+  .game-head { flex-wrap: wrap; row-gap: 6px; }
+  .btn-back { order: 0; }
+  .hud-level { order: 1; flex: 1 1 0; }
+  .game-head .btn-mute { order: 2; }
+  .hud-moves { order: 3; flex: 0 0 88px; }
+  .hud-goal { order: 4; flex: 1 1 0; justify-content: center; }
   .score-value { min-width: 70px; font-size: 1.3rem; }
   .toran { height: 46px; }
   #screen-game { padding-top: 54px; }

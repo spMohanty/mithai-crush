@@ -67,7 +67,7 @@ export const LEVELS = [
     id: 6, city: 'Amritsar', hindi: 'अमृतसर', emblem: '🛕', moves: 26,
     goal: { collect: { laddoo: 30, barfi: 30 } },
     starScores: [7000, 12000, 17000],
-    intro: 'Amritsar! Collect laddoos AND barfis, ji!',
+    intro: 'Amritsar! Collect laddoos AND barfis!',
     shout: 'Balle balle!',
   },
   {

@@ -193,6 +193,14 @@ function anaarOverlay() {
   </g>`;
 }
 
+// Pink swatch matching .cwell.chashni — used wherever the chashni goal is shown.
+export function chashniSwatchSVG() {
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="14" y="14" width="72" height="72" rx="18" fill="#EC4899" stroke="#FBCFE8" stroke-width="6"/>
+    <ellipse cx="38" cy="34" rx="16" ry="10" fill="#FFFFFF" opacity="0.45"/>
+  </svg>`;
+}
+
 export function tileSVG(tile) {
   let inner;
   if (tile.special === CHAKRI) {
