@@ -142,6 +142,7 @@ function decorateTitle() {
 }
 function decorateToran() {
   const svg = document.querySelector('.toran');
+  if (!svg.clientHeight) return; // hidden (rail mode) — skip; resize back re-tiles it
   const path = svg.querySelector('.toran-string');
   const group = svg.querySelector('.toran-items');
   // Size the viewBox to the strip's real aspect ratio so nothing is ever sliced
