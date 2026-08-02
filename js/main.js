@@ -2,9 +2,10 @@
 
 import {
   SIZE, TYPES, ROCKET_H, ROCKET_V, ANAAR, CHAKRI,
-  makeRng, createBoard, idx, rc,
+  makeRng, createBoard, idx, rc, isValidSwap,
   findValidMoves, performSwap, resolveStep, ensurePlayable,
 } from './board.js';
+import { generateCertified, makeGenerosity, evaluateSwap, spectacleScore } from './director.js';
 import { LEVELS, chashniArray } from './levels.js';
 import { tileSVG, sweetSVG, SWEET_COLORS, SWEET_NAMES, injectDefs, chashniSwatchSVG } from './sweets.js';
 import { sfx, initAudio, setMuted, isMuted } from './audio.js';
@@ -43,7 +44,7 @@ const state = {
   level: null, board: null, rng: makeRng(Date.now() % 2 ** 31),
   score: 0, movesLeft: 0, collected: {},
   busy: false, selected: null, over: false,
-  hintTimer: null, hintEls: [],
+  hintTimer: null, hintEls: [], golden: null,
 };
 
 const els = {
@@ -377,7 +378,13 @@ async function attemptSwap(a, b) {
   sfx.swapTick();
   await wait(270);
 
-  const step = performSwap(state.board, a, b, state.rng);
+  // Golden replay: if this is the armed certified swap, resolve the whole chain with
+  // the certification seed — reproducing the searched spectacle exactly.
+  const g = state.golden;
+  const isGolden = g && g.armed && ((a === g.a && b === g.b) || (a === g.b && b === g.a));
+  const rng = isGolden ? makeRng(g.seed) : state.rng;
+
+  const step = performSwap(state.board, a, b, rng);
   if (!step) {
     setPos(elA, a); setPos(elB, b);
     elA.classList.add('shake'); elB.classList.add('shake');
@@ -388,6 +395,7 @@ async function attemptSwap(a, b) {
     armHint();
     return;
   }
+  if (g) g.armed = false; // any successful swap diverges the board from certification
   elA.classList.remove('swappingz');
   state.movesLeft--;
   updateHUD();
@@ -395,7 +403,7 @@ async function attemptSwap(a, b) {
   let n = 1;
   await animateStep(step, n);
   let next;
-  while ((next = resolveStep(state.board, state.rng))) {
+  while ((next = resolveStep(state.board, rng))) {
     n++;
     await animateStep(next, n);
   }
@@ -591,10 +599,22 @@ function armHint() {
   clearTimeout(state.hintTimer);
   state.hintTimer = setTimeout(() => {
     if (state.busy || state.over) return;
-    const moves = findValidMoves(state.board);
-    if (!moves.length) return;
-    const [a, b] = moves[Math.floor(Math.random() * moves.length)];
-    for (const i of [a, b]) {
+    // Spectacle-aware steering: prefer the armed golden swap; otherwise rank all
+    // valid moves by simulated outcome and pulse the best one.
+    let pair = null;
+    const g = state.golden;
+    if (g && g.armed && isValidSwap(state.board, g.a, g.b)) {
+      pair = [g.a, g.b];
+    } else {
+      const moves = findValidMoves(state.board);
+      if (!moves.length) return;
+      let bestScore = -Infinity;
+      for (const [a, b] of moves) {
+        const s = spectacleScore(evaluateSwap(state.board, a, b, 4242));
+        if (s > bestScore) { bestScore = s; pair = [a, b]; }
+      }
+    }
+    for (const i of pair) {
       const el = elFor(i);
       if (el) { el.classList.add('hint'); state.hintEls.push(el); }
     }
@@ -616,7 +636,34 @@ function startLevel(level, { card = true } = {}) {
   state.over = false;
   state.busy = false;
   state.selected = null;
-  state.board = createBoard({ rng: state.rng, chashni: chashniArray(level) });
+  // Dopamine Director: on fresh entries (not replays), search for a certified opening —
+  // a board whose best swap provably delivers the level's spectacle profile.
+  const dcfg = level.director || {};
+  const spawner = makeGenerosity(dcfg.generosity || 0);
+  state.golden = null;
+  let board = null;
+  if (card && dcfg.opening) {
+    const pack = generateCertified({
+      profile: dcfg.opening,
+      chashni: chashniArray(level),
+      spawner,
+      maxAttempts: 300,
+      budgetMs: 150,
+    });
+    if (pack) {
+      board = pack.board;
+      state.golden = {
+        a: pack.golden.a, b: pack.golden.b,
+        seed: pack.refillSeed, metrics: pack.metrics,
+        certified: pack.certified, armed: true,
+      };
+    }
+  }
+  if (!board) {
+    board = createBoard({ rng: state.rng, chashni: chashniArray(level) });
+    if (spawner) board.spawner = spawner;
+  }
+  state.board = board;
   els.city.textContent = level.city;
   els.levelno.textContent = `Level ${level.id} · ${level.hindi}`;
   renderChashni();

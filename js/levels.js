@@ -34,6 +34,7 @@ export const LEVELS = [
     starScores: [5000, 9000, 14000],
     intro: 'Namaste Mumbai! Match 3 sweets — just swipe!',
     shout: 'Jhakaas!',
+    director: { opening: { minChain: 4, wantSpecial: true }, generosity: 0.2 },
   },
   {
     id: 2, city: 'Delhi', hindi: 'दिल्ली', emblem: '🏛️', moves: 22,
@@ -41,6 +42,7 @@ export const LEVELS = [
     starScores: [4000, 8000, 12000],
     intro: "Delhi's laddoos are legendary — collect 35!",
     shout: 'Ek number!',
+    director: { opening: { minChain: 3 }, generosity: 0.15 },
   },
   {
     id: 3, city: 'Jaipur', hindi: 'जयपुर', emblem: '🏰', moves: 24,
@@ -48,6 +50,7 @@ export const LEVELS = [
     starScores: [5000, 9000, 14000],
     intro: 'The Pink City! Clear all the chashni glaze!',
     shout: 'Wah sa!',
+    director: { opening: { minChain: 3 }, generosity: 0.18 },
   },
   {
     id: 4, city: 'Kolkata', hindi: 'कोलकाता', emblem: '🌉', moves: 24,
@@ -55,6 +58,7 @@ export const LEVELS = [
     starScores: [6000, 10000, 15000],
     intro: 'Kolkata calling! Pop 45 gulab jamuns!',
     shout: 'Darun!',
+    director: { generosity: 0.12 },
   },
   {
     id: 5, city: 'Chennai', hindi: 'चेन्नई', emblem: '🏖️', moves: 22,
@@ -62,6 +66,7 @@ export const LEVELS = [
     starScores: [30000, 40000, 52000],
     intro: 'Chennai Express — hit 30,000 points!',
     shout: 'Semma!',
+    director: { generosity: 0.12 },
   },
   {
     id: 6, city: 'Amritsar', hindi: 'अमृतसर', emblem: '🛕', moves: 26,
@@ -69,6 +74,7 @@ export const LEVELS = [
     starScores: [7000, 12000, 17000],
     intro: 'Amritsar! Collect laddoos AND barfis!',
     shout: 'Balle balle!',
+    director: { opening: { minChain: 3 }, generosity: 0.2 },
   },
   {
     id: 7, city: 'Goa', hindi: 'गोवा', emblem: '🥥', moves: 26,
@@ -76,6 +82,7 @@ export const LEVELS = [
     starScores: [8000, 13000, 19000],
     intro: 'Goa vibes! The whole beach is glazed — clean it up!',
     shout: 'Borem!',
+    director: { generosity: 0.1 },
   },
   {
     id: 8, city: 'Varanasi', hindi: 'वाराणसी', emblem: '🪔', moves: 25,
@@ -83,6 +90,7 @@ export const LEVELS = [
     starScores: [60000, 78000, 99000],
     intro: 'The lanes of Varanasi — 60,000 points. Ready?',
     shout: 'Bhaukaal!',
+    director: { generosity: 0.1 },
   },
   {
     id: 9, city: 'Kashmir', hindi: 'कश्मीर', emblem: '🏔️', moves: 30,
@@ -90,6 +98,7 @@ export const LEVELS = [
     starScores: [10000, 16000, 24000],
     intro: 'Kashmir, paradise on earth! Clear the chashni, collect the katli — win it all!',
     shout: 'Wah wah!',
+    director: { opening: { minChain: 4 }, generosity: 0.15 },
   },
 ];
 
