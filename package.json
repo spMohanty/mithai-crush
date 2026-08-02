@@ -2,5 +2,10 @@
   "name": "barfi-blast",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node --test test/" }
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
 }

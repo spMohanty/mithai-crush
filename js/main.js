@@ -110,7 +110,7 @@ function goalText(level) {
   const parts = [];
   if (g.score) parts.push(`${nf.format(g.score)} points`);
   if (g.collect) for (const [t, n] of Object.entries(g.collect)) parts.push(`${n} ${SWEET_NAMES[t]}`);
-  if (g.chashni) parts.push('saari chashni saaf');
+  if (g.chashni) parts.push('clear all chashni');
   return parts.join(' + ');
 }
 function renderMap() {
@@ -125,7 +125,7 @@ function renderMap() {
       <div class="medal">${locked ? '🔒' : level.emblem}</div>
       <div class="info">
         <div class="city">${level.city}<small>${level.hindi}</small></div>
-        <div class="lvlgoal">${goalText(level)} · ${level.moves} chaalein</div>
+        <div class="lvlgoal">${goalText(level)} · ${level.moves} moves</div>
       </div>
       <div class="stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3 - stars)}</span></div>`;
     if (!locked) li.addEventListener('click', () => { initAudio(); sfx.swapTick(); startLevel(level); });
@@ -151,7 +151,7 @@ function goalHTML() {
   if (g.chashni) {
     const left = state.board ? state.board.chashni.filter((v) => v > 0).length : 0;
     const done = left === 0;
-    html += `<div class="goal-item ${done ? 'done' : ''}"><span class="goal-icon">🍯</span><span class="goal-count">${done ? 'saaf!' : left + ' baaki'}</span></div>`;
+    html += `<div class="goal-item ${done ? 'done' : ''}"><span class="goal-icon">🍯</span><span class="goal-count">${done ? 'clear!' : left + ' left'}</span></div>`;
   }
   return html;
 }
@@ -337,7 +337,7 @@ async function settleTurn() {
   const res = ensurePlayable(state.board, state.rng);
   if (res.shuffled) {
     sfx.shuffle();
-    toast('Koi chaal nahi — phir se milaya!', true);
+    toast('No moves left — reshuffling!', true);
     await wait(700);
     renderBoard();
   }
@@ -546,12 +546,12 @@ function startLevel(level) {
 
 function showTutorial() {
   els.card.innerHTML = `
-    <h2>Kaise Khelein?</h2>
-    <div class="tut-row"><span class="tut-emoji">👆</span><span>Do mithai swap karo — <b>3 ek-jaise milao</b>, woh phat jaayengi!</span></div>
-    <div class="tut-row"><svg viewBox="0 0 100 100">${sweetSVG('laddoo')}</svg><span><b>4 milao</b> → Patakha Rocket — poori line saaf!</span></div>
-    <div class="tut-row"><svg viewBox="0 0 100 100">${tileSVG({ type: 'any', special: CHAKRI }).replace(/<\/?svg[^>]*>/g, '')}</svg><span><b>5 milao</b> → Chakri! Kisi bhi mithai se swap karo</span></div>
-    <div class="tut-row"><span class="tut-emoji">🍯</span><span>Pink <b>chashni</b> cells pe match karke unhe saaf karo</span></div>
-    <div class="ov-buttons"><button class="btn btn-gold btn-mid" id="btn-tut-go">Chalo, Shuru!</button></div>`;
+    <h2>How to Play</h2>
+    <div class="tut-row"><span class="tut-emoji">👆</span><span>Swap two sweets — <b>match 3 alike</b> and they pop!</span></div>
+    <div class="tut-row"><svg viewBox="0 0 100 100">${sweetSVG('laddoo')}</svg><span><b>Match 4</b> → Patakha Rocket — clears a whole line!</span></div>
+    <div class="tut-row"><svg viewBox="0 0 100 100">${tileSVG({ type: 'any', special: CHAKRI }).replace(/<\/?svg[^>]*>/g, '')}</svg><span><b>Match 5</b> → Chakri! Swap it with any sweet</span></div>
+    <div class="tut-row"><span class="tut-emoji">🍯</span><span>Match on pink <b>chashni</b> glaze to clear it</span></div>
+    <div class="ov-buttons"><button class="btn btn-gold btn-mid" id="btn-tut-go">Let's Go!</button></div>`;
   els.overlay.classList.remove('hidden');
   $('#btn-tut-go').addEventListener('click', () => {
     progress.sawTutorial = true; saveProgress();
@@ -592,19 +592,19 @@ async function winFlow() {
   await wait(600);
   const next = LEVELS.find((l) => l.id === lv.id + 1);
   els.card.innerHTML = `
-    <h2>Jeet Gaye! 🎉</h2>
-    <p class="ov-sub">${lv.city} ${lv.hindi} — <b>${lv.shout}</b> Swaad aa gaya!</p>
+    <h2>You Won! 🎉</h2>
+    <p class="ov-sub">${lv.city} ${lv.hindi} — <b>${lv.shout}</b></p>
     <div class="ov-stars">
       <span class="ov-star ${stars >= 1 ? 'lit' : ''}">★</span>
       <span class="ov-star ${stars >= 2 ? 'lit' : ''}">★</span>
       <span class="ov-star ${stars >= 3 ? 'lit' : ''}">★</span>
     </div>
     <div class="ov-score">${nf.format(state.score)}</div>
-    <p class="ov-goalline">Goal poora! ${goalText(lv)}</p>
+    <p class="ov-goalline">Goal complete! ${goalText(lv)}</p>
     <div class="ov-buttons">
-      ${next ? '<button class="btn btn-gold btn-mid" id="btn-next">Aage Badho →</button>' : '<div class="ov-goalline">Poori Yatra mubarak! 🇮🇳</div>'}
-      <button class="btn btn-plain btn-mid" id="btn-retry">Phir Se</button>
-      <button class="btn btn-plain btn-mid" id="btn-map">Yatra Map</button>
+      ${next ? '<button class="btn btn-gold btn-mid" id="btn-next">Next →</button>' : '<div class="ov-goalline">Full Yatra complete! 🇮🇳</div>'}
+      <button class="btn btn-plain btn-mid" id="btn-retry">Replay</button>
+      <button class="btn btn-plain btn-mid" id="btn-map">Map</button>
     </div>`;
   els.overlay.classList.remove('hidden');
   $('#btn-next')?.addEventListener('click', () => startLevel(next));
@@ -617,13 +617,13 @@ function loseFlow() {
   sfx.lose();
   const lv = state.level;
   els.card.innerHTML = `
-    <h2>Hai Re! 😅</h2>
-    <p class="ov-sub">Chaalein khatam ho gayin…</p>
-    <p class="ov-goalline" style="color:#9A3412">Koi baat nahi — phir se try karo!</p>
+    <h2>So Close! 😅</h2>
+    <p class="ov-sub">Out of moves…</p>
+    <p class="ov-goalline" style="color:#9A3412">No worries — try again!</p>
     <div class="ov-score">${nf.format(state.score)}</div>
     <div class="ov-buttons">
-      <button class="btn btn-gold btn-mid" id="btn-retry">Phir Se Khelo</button>
-      <button class="btn btn-plain btn-mid" id="btn-map">Yatra Map</button>
+      <button class="btn btn-gold btn-mid" id="btn-retry">Try Again</button>
+      <button class="btn btn-plain btn-mid" id="btn-map">Map</button>
     </div>`;
   els.overlay.classList.remove('hidden');
   $('#btn-retry').addEventListener('click', () => startLevel(lv));
