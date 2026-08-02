@@ -6,6 +6,7 @@ import {
   findValidMoves, performSwap, resolveStep, ensurePlayable,
 } from './board.js';
 import { generateCertified, makeGenerosity, evaluateSwap, spectacleScore } from './director.js';
+import { rangoliSVG } from './rangoli.js';
 import { LEVELS, chashniArray } from './levels.js';
 import { tileSVG, sweetSVG, SWEET_COLORS, SWEET_NAMES, injectDefs, chashniSwatchSVG } from './sweets.js';
 import { sfx, initAudio, setMuted, isMuted } from './audio.js';
@@ -932,6 +933,12 @@ injectDefs();
 decorateTitle();
 decorateToran();
 refreshTitle();
+// Fresh hand-painted rangoli each visit — two different seeds, like two artists at work.
+{
+  const seed = Math.floor(Math.random() * 2 ** 31);
+  document.querySelector('.rangoli-a').innerHTML = rangoliSVG(seed);
+  document.querySelector('.rangoli-b').innerHTML = rangoliSVG((seed ^ 0x5f3759df) >>> 0);
+}
 
 // Dev/testing hook (harmless in production; enables scripted play + state inspection).
 window.__barfi = {

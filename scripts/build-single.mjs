@@ -34,7 +34,7 @@ const stripModule = (src) => src
   .replace(/^import\s+[^;]*from\s*'[^']*';\s*$/gm, '')
   .replace(/^export\s+(const|function|let|class)\b/gm, '$1');
 
-const js = ['js/board.js', 'js/levels.js', 'js/sweets.js', 'js/audio.js', 'js/main.js']
+const js = ['js/board.js', 'js/director.js', 'js/rangoli.js', 'js/levels.js', 'js/sweets.js', 'js/audio.js', 'js/main.js']
   .map((p) => `// ===== ${p} =====\n` + stripModule(read(p)))
   .join('\n');
 

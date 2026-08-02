@@ -54,14 +54,11 @@ body {
 .rangoli {
   position: absolute;
   width: 74vmin; height: 74vmin;
-  border-radius: 50%;
-  background: repeating-conic-gradient(from 0deg,
-    rgba(233, 30, 99, 0.16) 0deg 9deg, transparent 9deg 18deg,
-    rgba(245, 197, 66, 0.14) 18deg 27deg, transparent 27deg 36deg);
-  -webkit-mask: radial-gradient(circle, transparent 26%, #000 28% 40%, transparent 42% 52%, #000 54% 60%, transparent 62%);
-          mask: radial-gradient(circle, transparent 26%, #000 28% 40%, transparent 42% 52%, #000 54% 60%, transparent 62%);
+  opacity: 0.38;
+  filter: blur(0.6px); /* powder softness */
   animation: rangoliSpin 140s linear infinite;
 }
+.rangoli svg { width: 100%; height: 100%; display: block; }
 .rangoli-a { top: -30vmin; right: -24vmin; }
 .rangoli-b { bottom: -34vmin; left: -26vmin; animation-direction: reverse; }
 
