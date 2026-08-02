@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/*.test.mjs",
+    "sim": "node e2e/sim-tune.mjs"
   },
   "dependencies": {
     "puppeteer-core": "^23.11.1"
