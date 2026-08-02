@@ -1,7 +1,9 @@
-# Mithai Crush — एक दम देसी Match-3
+# Barfi Blast — Match. Blast. Barfi.
 
 Candy Crush, indianized. Swap **mithai** (Indian sweets), fire **Diwali patakhe**,
 and travel a 9-city **Mithai Yatra** from Mumbai to Kashmir.
+
+**Play it live:** https://spmohanty.com/barfi-blast/
 
 ## Run it
 
@@ -46,7 +48,7 @@ js/main.js     rendering, input, animation, progression
 css/style.css  Diwali-night visual identity
 ```
 
-Dev console helper: `window.__mithai` (state, validMoves(), swap(a,b), startLevel(n)).
+Dev console helper: `window.__barfi` (state, validMoves(), swap(a,b), startLevel(n)).
 
 ## E2E harnesses (optional)
 

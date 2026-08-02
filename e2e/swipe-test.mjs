@@ -1,9 +1,9 @@
-// Real-touch E2E against the LIVE deployed Mithai Crush.
+// Real-touch E2E against the LIVE deployed Barfi Blast.
 // Uses CDP Input.dispatchTouchEvent — Chrome's genuine touch/gesture pipeline
 // (touch-action, scroll-vs-consume, pointercancel), i.e. Android-Chrome semantics.
 import puppeteer from 'puppeteer-core';
 
-const URL = 'https://spmohanty.com/mithai-crush/?e2e=' + Date.now();
+const URL = (process.env.TEST_URL || 'https://spmohanty.com/barfi-blast/') + '?e2e=' + Date.now();
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -59,17 +59,17 @@ try {
   }
 
   const grab = () => page.evaluate(() => ({
-    score: window.__mithai.state.score,
-    moves: window.__mithai.state.movesLeft,
-    busy: window.__mithai.state.busy,
+    score: window.__barfi.state.score,
+    moves: window.__barfi.state.movesLeft,
+    busy: window.__barfi.state.busy,
     scrollY: window.scrollY,
-    selected: window.__mithai.state.selected,
+    selected: window.__barfi.state.selected,
   }));
 
   async function swipeCase(label, steps, stepDelay) {
-    await page.waitForFunction(() => !window.__mithai.state.busy, { timeout: 20000 });
+    await page.waitForFunction(() => !window.__barfi.state.busy, { timeout: 20000 });
     const info = await page.evaluate(() => {
-      const mm = window.__mithai;
+      const mm = window.__barfi;
       const [a, b] = mm.validMoves()[0];
       const [ar, ac] = mm.rc(a); const [br, bc] = mm.rc(b);
       const r = document.querySelector('#board').getBoundingClientRect();
@@ -83,7 +83,7 @@ try {
     const before = await grab();
     await touchSwipe(client, info.x0, info.y0, info.x1, info.y1, steps, stepDelay);
     await sleep(3200);
-    await page.waitForFunction(() => !window.__mithai.state.busy, { timeout: 20000 });
+    await page.waitForFunction(() => !window.__barfi.state.busy, { timeout: 20000 });
     const after = await grab();
     const swapped = after.moves === before.moves - 1;
     console.log(`${label}: ${swapped ? 'SWAPPED' : 'NO SWAP'} | moves ${before.moves}->${after.moves} | score +${after.score - before.score} | scrollY ${before.scrollY}->${after.scrollY}`);

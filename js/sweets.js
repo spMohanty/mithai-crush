@@ -45,9 +45,9 @@ export const GRADIENT_DEFS = `
   </linearGradient>`;
 
 export function injectDefs(doc = document) {
-  if (doc.getElementById('mithai-defs')) return;
+  if (doc.getElementById('barfi-defs')) return;
   const holder = doc.createElement('div');
-  holder.innerHTML = `<svg id="mithai-defs" aria-hidden="true" focusable="false"
+  holder.innerHTML = `<svg id="barfi-defs" aria-hidden="true" focusable="false"
     style="position:absolute;width:0;height:0;overflow:hidden"><defs>${GRADIENT_DEFS}</defs></svg>`;
   doc.body.prepend(holder.firstElementChild);
 }

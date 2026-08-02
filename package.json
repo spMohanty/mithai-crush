@@ -1,5 +1,5 @@
 {
-  "name": "mithai-crush",
+  "name": "barfi-blast",
   "private": true,
   "type": "module",
   "scripts": { "test": "node --test test/" }

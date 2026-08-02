@@ -1,4 +1,4 @@
-// Builds dist/mithai-crush.html — the whole game as one self-contained page
+// Builds dist/barfi-blast.html — the whole game as one self-contained page
 // (inline CSS, inline JS, fonts as data URIs). Suitable for Claude Artifacts,
 // which wrap the file in their own <!doctype>/<head>/<body> skeleton and block
 // all external requests. Usage:
@@ -52,7 +52,7 @@ const css = read('css/style.css');
 
 // Artifact pages provide their own doctype/head/body — emit content only.
 const out = `<meta charset="UTF-8">
-<title>Mithai Crush — Ek Dum Desi Match-3</title>
+<title>Barfi Blast — Match. Blast. Barfi.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <style>
 ${fontCss}${css}
@@ -64,6 +64,6 @@ ${js}
 `;
 
 mkdirSync(join(root, 'dist'), { recursive: true });
-writeFileSync(join(root, 'dist/mithai-crush.html'), out);
-console.log(`dist/mithai-crush.html written: ${(out.length / 1024).toFixed(0)} KB` +
+writeFileSync(join(root, 'dist/barfi-blast.html'), out);
+console.log(`dist/barfi-blast.html written: ${(out.length / 1024).toFixed(0)} KB` +
   (fontCss ? ' (fonts inlined)' : ' (NO fonts — system fallbacks)'));

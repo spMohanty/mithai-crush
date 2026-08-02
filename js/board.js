@@ -1,4 +1,4 @@
-// Mithai Crush — pure match-3 board logic. No DOM. Runs in browser and node:test.
+// Barfi Blast — pure match-3 board logic. No DOM. Runs in browser and node:test.
 
 export const SIZE = 8;
 export const TYPES = ['laddoo', 'jalebi', 'katli', 'jamun', 'barfi', 'samosa'];

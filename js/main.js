@@ -1,4 +1,4 @@
-// Mithai Crush — renderer, input, animation orchestration, progression.
+// Barfi Blast — renderer, input, animation orchestration, progression.
 
 import {
   SIZE, TYPES, ROCKET_H, ROCKET_V, ANAAR, CHAKRI,
@@ -16,10 +16,19 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const COMBO_WORDS = ['Wah!', 'Shabash!', 'Kya baat hai!', 'Ek number!', 'Zabardast!', 'DHAMAKEDAAR!', 'FULL PAISA VASOOL!'];
 
 // ---------- persistence ----------
-const STORE_KEY = 'mithaiCrush.v1';
+const STORE_KEY = 'barfiBlast.v1';
+const LEGACY_KEY = 'mithaiCrush.v1'; // pre-rebrand progress — migrated, never deleted
 function loadProgress() {
   try {
-    const p = JSON.parse(localStorage.getItem(STORE_KEY)) || {};
+    let raw = localStorage.getItem(STORE_KEY);
+    if (!raw) {
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        raw = legacy;
+        try { localStorage.setItem(STORE_KEY, legacy); } catch { /* best effort */ }
+      }
+    }
+    const p = JSON.parse(raw) || {};
     return { unlocked: 1, stars: {}, best: {}, muted: false, sawTutorial: false, ...p };
   } catch { return { unlocked: 1, stars: {}, best: {}, muted: false, sawTutorial: false }; }
 }
@@ -584,7 +593,7 @@ async function winFlow() {
   const next = LEVELS.find((l) => l.id === lv.id + 1);
   els.card.innerHTML = `
     <h2>Jeet Gaye! 🎉</h2>
-    <p class="ov-sub">${lv.city} ${lv.hindi} — ho gaya meetha!</p>
+    <p class="ov-sub">${lv.city} ${lv.hindi} — <b>${lv.shout}</b> Swaad aa gaya!</p>
     <div class="ov-stars">
       <span class="ov-star ${stars >= 1 ? 'lit' : ''}">★</span>
       <span class="ov-star ${stars >= 2 ? 'lit' : ''}">★</span>
@@ -674,7 +683,7 @@ decorateTitle();
 decorateToran();
 
 // Dev/testing hook (harmless in production; enables scripted play + state inspection).
-window.__mithai = {
+window.__barfi = {
   state, progress,
   validMoves: () => findValidMoves(state.board),
   swap: (a, b) => attemptSwap(a, b),
