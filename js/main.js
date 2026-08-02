@@ -45,6 +45,7 @@ const state = {
   score: 0, movesLeft: 0, collected: {},
   busy: false, selected: null, over: false,
   hintTimer: null, hintEls: [], golden: null,
+  nukeOn: false, nukeEls: [], nukeTag: null,
 };
 
 const els = {
@@ -369,7 +370,7 @@ function setPos(el, i) {
 async function attemptSwap(a, b) {
   if (state.busy || state.over) return;
   state.busy = true;
-  clearHint(); deselect();
+  clearHint(); deselect(); clearNuke();
 
   const elA = elFor(a), elB = elFor(b);
   if (!elA || !elB) { state.busy = false; return; }
@@ -594,8 +595,61 @@ async function animateStep(step, n) {
   updateHUD();
 }
 
+// ---------- nuke vision (secret: type "boom" during a level) ----------
+function toggleNuke(force) {
+  state.nukeOn = force !== undefined ? !!force : !state.nukeOn;
+  console.log(state.nukeOn ? '🧨 nuke vision ON' : '🧨 nuke vision off');
+  if (state.nukeOn) showNuke(); else clearNuke();
+}
+function clearNuke() {
+  for (const el of state.nukeEls) el.classList.remove('nuke');
+  state.nukeEls = [];
+  state.nukeTag?.remove();
+  state.nukeTag = null;
+}
+function showNuke() {
+  clearNuke();
+  if (!state.nukeOn || !state.board || state.busy || state.over) return;
+  if (!$('#screen-game').classList.contains('active')) return;
+  let pair = null; let metrics = null; let exact = false;
+  const g = state.golden;
+  if (g && g.armed && isValidSwap(state.board, g.a, g.b)) {
+    pair = [g.a, g.b]; metrics = g.metrics; exact = g.certified;
+  } else {
+    const moves = findValidMoves(state.board);
+    if (!moves.length) return;
+    let bestScore = -Infinity;
+    for (const [a, b] of moves) {
+      const m = evaluateSwap(state.board, a, b, 4242);
+      const s = spectacleScore(m);
+      if (s > bestScore) { bestScore = s; pair = [a, b]; metrics = m; }
+    }
+  }
+  if (!pair || !metrics) return;
+  for (const i of pair) {
+    const el = elFor(i);
+    if (el) { el.classList.add('nuke'); state.nukeEls.push(el); }
+  }
+  const { x, y } = cellCenter(Math.min(pair[0], pair[1]));
+  const tag = document.createElement('div');
+  tag.className = 'nuke-tag';
+  tag.textContent = `☢ ×${metrics.chain} ${exact ? '' : '~'}${nf.format(metrics.points)}`;
+  tag.style.left = `${x - 30}px`;
+  tag.style.top = `${y - 52}px`;
+  els.fx.appendChild(tag);
+  state.nukeTag = tag;
+}
+const NUKE_CODE = 'boom';
+let nukeBuffer = '';
+window.addEventListener('keydown', (e) => {
+  if (e.key.length !== 1) return;
+  nukeBuffer = (nukeBuffer + e.key.toLowerCase()).slice(-NUKE_CODE.length);
+  if (nukeBuffer === NUKE_CODE) { nukeBuffer = ''; toggleNuke(); }
+});
+
 // ---------- hints ----------
 function armHint() {
+  if (state.nukeOn) showNuke(); // nuke vision refreshes whenever the board settles
   clearTimeout(state.hintTimer);
   state.hintTimer = setTimeout(() => {
     if (state.busy || state.over) return;
@@ -636,6 +690,7 @@ function startLevel(level, { card = true } = {}) {
   state.over = false;
   state.busy = false;
   state.selected = null;
+  clearNuke();
   // Dopamine Director: on fresh entries (not replays), search for a certified opening —
   // a board whose best swap provably delivers the level's spectacle profile.
   const dcfg = level.director || {};
@@ -885,5 +940,6 @@ window.__barfi = {
   startLevel: (id, opts) => startLevel(LEVELS.find((l) => l.id === id), opts),
   render: () => { renderBoard(); renderChashni(); updateHUD(); },
   settle: () => settleTurn(),
+  nuke: (v) => toggleNuke(v),
   rc, idx,
 };
