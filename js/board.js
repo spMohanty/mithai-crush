@@ -280,7 +280,9 @@ function buildStep(board, rng, { matches = [], swapCells = null, seedClear = [],
       write--;
     }
     for (let r = write; r >= 0; r--) {
-      const tile = { id: board.nextId++, type: pick(rng, board.types), special: null };
+      // optional injection point: board.spawner may propose a refill type (falsy = random)
+      const forced = board.spawner ? board.spawner(board, r, c, rng) : null;
+      const tile = { id: board.nextId++, type: forced || pick(rng, board.types), special: null };
       cells[idx(r, c)] = tile;
       spawns.push({ to: idx(r, c), tile });
     }
