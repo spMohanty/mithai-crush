@@ -142,19 +142,35 @@ function decorateToran() {
   const svg = document.querySelector('.toran');
   const path = svg.querySelector('.toran-string');
   const group = svg.querySelector('.toran-items');
+  // Size the viewBox to the strip's real aspect ratio so nothing is ever sliced
+  // off vertically (a fixed 800-wide drawing over-zooms and clips on wide screens),
+  // and tile seamless 400-unit swags across the full width.
+  const h = svg.clientHeight || 58;
+  const W = Math.max(800, Math.ceil((window.innerWidth * 64) / h));
+  svg.setAttribute('viewBox', `0 0 ${W} 64`);
+  let d = 'M-10 22';
+  for (let x = 0; x < W + 400; x += 400) {
+    d += ` Q ${x + 100} 50 ${x + 200} 26 Q ${x + 300} 4 ${x + 400} 22`;
+  }
+  path.setAttribute('d', d);
   const len = path.getTotalLength();
   let out = '';
-  for (let d = 14; d < len; d += 40) {
-    const p = path.getPointAtLength(d);
+  for (let t = 14; t < len; t += 40) {
+    const p = path.getPointAtLength(t);
     out += `<use href="#patta" x="0" y="0" transform="translate(${(p.x - 4).toFixed(1)} ${(p.y + 2).toFixed(1)}) rotate(8)"/>`;
     out += `<use href="#patta" x="0" y="0" transform="translate(${(p.x + 4).toFixed(1)} ${(p.y + 2).toFixed(1)}) rotate(-8)"/>`;
   }
-  for (let d = 30; d < len; d += 40) {
-    const p = path.getPointAtLength(d);
+  for (let t = 30; t < len; t += 40) {
+    const p = path.getPointAtLength(t);
     out += `<use href="#genda" transform="translate(${p.x.toFixed(1)} ${(p.y + 6).toFixed(1)})"/>`;
   }
   group.innerHTML = out;
 }
+let toranResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(toranResizeTimer);
+  toranResizeTimer = setTimeout(decorateToran, 150);
+});
 
 // ---------- map ----------
 function goalText(level) {
