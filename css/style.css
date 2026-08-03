@@ -2,25 +2,90 @@
    MITHAI CRUSH — Diwali-night mithai shop
    ============================================================ */
 
+/* ============================================================
+   MEENAKARI MIDNIGHT — enamel poured into raised gold cloisons,
+   lit by one warm lamp above-left (165°). Legacy names are kept
+   as aliases so nothing downstream regresses.
+   ============================================================ */
 :root {
-  --night-1: #1C0A33;
-  --night-2: #31104F;
-  --night-3: #0E0519;
-  --gold: #F5C542;
-  --gold-hi: #FFE08A;
-  --gold-deep: #B8860B;
-  --gold-line: rgba(245, 197, 66, 0.55);
-  --rani: #E91E63;
-  --marigold: #FF9933;
-  --turmeric: #FFC93C;
-  --peacock: #14B8A6;
-  --cream: #FFF3DC;
-  --maroon: #7A1E3C;
+  /* ground — lacquer night */
+  --ink-900: #07030F; --ink-800: #0E0519; --ink-700: #170A2B;
+  --ink-600: #1C0A33; --ink-500: #2A0E45; --ink-400: #31104F;
+  --aubergine: #3D0F35;
+  --night-1: var(--ink-600); --night-2: var(--ink-400); --night-3: var(--ink-800);
+
+  /* gold — a ladder, hue-shifted warm into shadow */
+  --au-100: #FFF3CE; --au-200: #FFE3A0; --au-300: #F7CE63; --au-400: #E8B33C;
+  --au-500: #C6902A; --au-600: #96651A; --au-700: #5E3D0C; --au-800: #3A2405;
+  --gold: var(--au-400); --gold-hi: var(--au-200); --gold-deep: var(--au-600);
+  --gold-line: var(--au-500);
+  /* the signature metal ramp: two bright bands with a dark trough between */
+  --au-ramp: linear-gradient(165deg,
+    var(--au-600) 0%, var(--au-300) 18%, var(--au-100) 30%,
+    var(--au-400) 46%, var(--au-600) 62%, var(--au-300) 80%, var(--au-500) 100%);
+
+  /* vark — silver leaf, cool, never neutral grey */
+  --vark-100: #FFFFFF; --vark-200: #E8EDF5; --vark-300: #C3CBD8;
+  --vark-400: #9AA4B4; --vark-500: #6E7789;
+
+  /* enamel — each jewel is a pair (surface + depth) */
+  --en-ruby: #A8123C;    --en-ruby-d: #4A0620;
+  --en-rani: #E0245E;    --en-rani-d: #7A0B2E;
+  --en-firozi: #0E8F94;  --en-firozi-d: #054045;
+  --en-emerald: #127A4E; --en-emerald-d: #05341F;
+  --en-lapis: #1B3C8F;   --en-lapis-d: #0A1A44;
+  --rani: var(--en-rani); --peacock: var(--en-firozi);
+
+  /* light — flame, not enamel (pulled back from neon) */
+  --marigold: #F58A1F; --turmeric: #F5B92E; --saffron: #E85D14;
+
+  /* paper */
+  --paper-100: #FFF7E8; --paper-200: #FBECCF; --paper-300: #F0DCB4;
+  --ink-warm: #43200B;
+  --cream: var(--paper-100); --maroon: #6E1A35;
+
   --dabba-1: #98281B;
   --dabba-2: #5F120A;
+
+  /* radii — a scale plus the concentricity law r_outer = r_inner + border + padding */
+  --r-1: 4px; --r-2: 8px; --r-3: 12px; --r-4: 18px; --r-5: 26px; --r-pill: 999px;
+
+  /* shadow ladder — plum-tinted, contact + form + ambient, never black */
+  --sh-contact: 0 1px 1px rgba(7, 3, 15, .60);
+  --sh-1: 0 1px 1px rgba(7, 3, 15, .50), 0 2px 4px rgba(28, 10, 51, .42);
+  --sh-2: 0 1px 1px rgba(7, 3, 15, .50), 0 4px 10px rgba(28, 10, 51, .42), 0 10px 24px rgba(7, 3, 15, .34);
+  --sh-3: 0 2px 2px rgba(7, 3, 15, .50), 0 10px 22px rgba(28, 10, 51, .45), 0 26px 56px rgba(7, 3, 15, .45);
+  --sh-lift: 0 2px 2px rgba(7, 3, 15, .50), 0 14px 30px rgba(28, 10, 51, .50), 0 34px 70px rgba(7, 3, 15, .50);
+  --glow-au: 0 0 0 1px rgba(255, 227, 160, .20), 0 0 18px rgba(232, 179, 60, .28);
+
+  /* the cloison: every gold edge is a sandwich, never a single stroke */
+  --cloison:
+    inset 0 0 0 1px rgba(255, 243, 206, .30),
+    inset 0 1px 0 rgba(255, 243, 206, .50),
+    inset 0 -1px 0 rgba(94, 61, 12, .55),
+    0 0 0 1px var(--au-700);
+
+  /* easing + duration */
+  --e-out: cubic-bezier(.16, 1, .30, 1);
+  --e-snap: cubic-bezier(.22, .90, .24, 1);
+  --e-in-out: cubic-bezier(.65, 0, .35, 1);
+  --e-pop: cubic-bezier(.34, 1.32, .48, 1);
+  --d-micro: 120ms; --d-state: 200ms; --d-elem: 320ms; --d-card: 480ms;
+
   --font-display: 'Modak', 'Baloo 2', system-ui, sans-serif;
   --font-ui: 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
+  --font-label: 'Marcellus', 'Baloo 2', Georgia, serif;
   --cell-pad: 6.5%;
+}
+
+/* Gradient gold edge with zero extra elements — the highest-leverage utility here.
+   Callers set --surface to their own background layer(s). */
+.gold-band {
+  border: 2px solid transparent;
+  background-image: var(--surface), var(--au-ramp);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--cloison), var(--sh-2);
 }
 
 /* Dynamic-viewport unit with vh fallback (pre-2022 Safari) */
@@ -34,10 +99,7 @@ html, body { height: 100%; }
 body {
   font-family: var(--font-ui);
   color: var(--cream);
-  background:
-    radial-gradient(120vmax 90vmax at 50% -20%, var(--night-2), transparent 60%),
-    radial-gradient(90vmax 70vmax at 85% 110%, #3D0F35, transparent 55%),
-    linear-gradient(180deg, var(--night-1), var(--night-3));
+  background: var(--ink-800);
   min-height: 100dvh;
   overflow-x: hidden;
   user-select: none;
@@ -49,18 +111,42 @@ body {
 .btn { touch-action: manipulation; }
 
 /* ---------- atmosphere ---------- */
-.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+/* The night gradient lives HERE, not on body: .sky is a stacking context, so
+   .grain's mix-blend-mode has nothing to blend against unless the ground is inside it. */
+.sky {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(120vmax 90vmax at 50% -20%, var(--ink-400), transparent 60%),
+    radial-gradient(90vmax 70vmax at 85% 110%, var(--aubergine), transparent 55%),
+    linear-gradient(180deg, var(--ink-600), var(--ink-800));
+}
 
+/* Rangoli as INLAY, not wallpaper: gold-only linework at low opacity reads as
+   embossed floor inlay. Static — restraint is the luxury signal (and a perf win).
+
+   Sizing rule: the medallion's CENTRE must land on-canvas, and the number that governs that is
+   (size/2 − offset), not the size. At an early 92vmin/−46vmin the centre sat exactly on the
+   viewport edge, so everything carrying the hierarchy — bindu, core, hero ring — was off-screen
+   and all you saw were meaningless fragments of the outer bands. That is what read as scribble.
+
+   So this pass grows the disc and pushes the offset out by MORE than half the growth, which
+   makes it both bigger and better seated: 62→86vmin with −16→−24vmin moves the centre from
+   15vmin inside the corner to 19vmin inside it. The disc is ~90% larger in area, bleeds 24vmin
+   off the corner like inlay running under the wall, and still shows its centre and hero ring.
+
+   Opacity comes down a notch as it grows (0.22→0.20), which still nets out as much MORE presence
+   because the disc is ~90% larger and carries ~60% more linework than it used to. Checked
+   against 0.16 and 0.24 side by side on the title screen: 0.16 recedes into the sky and wastes
+   the new detail, 0.24 starts reading as a second subject next to the logo. 0.20 is the value
+   where the ornament is clearly legible and still obviously behind everything else. */
 .rangoli {
   position: absolute;
-  width: 74vmin; height: 74vmin;
-  opacity: 0.38;
-  filter: blur(0.6px); /* powder softness */
-  animation: rangoliSpin 140s linear infinite;
+  width: 86vmin; height: 86vmin;
+  opacity: 0.20;
 }
 .rangoli svg { width: 100%; height: 100%; display: block; }
-.rangoli-a { top: -30vmin; right: -24vmin; }
-.rangoli-b { bottom: -34vmin; left: -26vmin; animation-direction: reverse; }
+.rangoli-a { top: -24vmin; right: -24vmin; }
+.rangoli-b { bottom: -24vmin; left: -26vmin; }
 
 .grain {
   position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
@@ -203,7 +289,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   border-radius: 18px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform var(--d-state) var(--e-out), box-shadow var(--d-state) var(--e-out);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 .ynode:nth-child(odd) { align-self: flex-start; transform: rotate(-0.8deg); }
@@ -275,7 +361,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 .hud-goal { flex: 1.6; flex-direction: row; gap: 10px; }
 
 .hud-label { font-weight: 800; font-size: 1.02rem; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.hud-sub { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.hud-sub { font-family: var(--font-label); font-size: 0.66rem; font-weight: 400; letter-spacing: 0.13em; text-transform: uppercase; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .hud-big {
   font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; line-height: 1;
   color: var(--turmeric); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
@@ -293,7 +379,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   display: flex; align-items: center; gap: 10px;
   padding: 0 4px;
 }
-.score-label { font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem; opacity: 0.75; }
+.score-label { font-family: var(--font-label); font-weight: 400; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; opacity: 0.72; }
 .score-value {
   /* numerals are data: UI face with tabular figures, not the bubbly display face */
   font-family: var(--font-ui); font-weight: 800; font-size: 1.35rem; line-height: 1;
@@ -313,7 +399,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   border-radius: 999px;
   background: linear-gradient(90deg, var(--marigold), var(--turmeric));
   box-shadow: 0 0 10px rgba(255, 153, 51, 0.7);
-  transition: width 0.5s ease;
+  transition: width var(--d-card) var(--e-out);
 }
 .track-star {
   position: absolute; top: 50%;
@@ -329,20 +415,24 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 .track-star.s1 { left: 33.33%; } .track-star.s2 { left: 66.66%; } .track-star.s3 { left: 100%; }
 
 /* ---------- the dabba ---------- */
+/* Lacquer tray in a raised gold cloison. The border is real metal (--au-ramp clipped to
+   border-box), not a flat gold line; radius obeys r_outer = r_inner + border + padding. */
 .dabba {
   position: relative;
-  background:
-    radial-gradient(140% 100% at 50% 0%, rgba(255, 210, 140, 0.16), transparent 55%),
+  --surface:
+    radial-gradient(140% 100% at 50% 0%, rgba(255, 214, 148, 0.18), transparent 55%),
     linear-gradient(165deg, var(--dabba-1), var(--dabba-2));
-  border: 3px solid var(--gold-deep);
-  outline: 2px solid rgba(245, 197, 66, 0.35);
-  outline-offset: 4px;
-  border-radius: 24px;
+  border: 3px solid transparent;
+  background-image: var(--surface), var(--au-ramp);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-radius: calc(var(--r-3) + var(--dabba-pad) + 3px);
   padding: var(--dabba-pad);
   box-shadow:
-    inset 0 2px 12px rgba(255, 220, 160, 0.25),
-    inset 0 -8px 18px rgba(0, 0, 0, 0.45),
-    0 18px 40px rgba(0, 0, 0, 0.55);
+    var(--cloison),
+    inset 0 2px 14px rgba(255, 226, 170, 0.22),
+    inset 0 -10px 22px rgba(7, 3, 15, 0.50),
+    var(--sh-3);
 }
 .dabba-lid-tag {
   position: absolute; top: -13px; left: 50%; transform: translateX(-50%) rotate(-1deg);
@@ -366,6 +456,22 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 }
 
 .board, .chashni-layer, .fx-layer { position: absolute; inset: 0; }
+
+/* Each city gets its own floor: a seeded rangoli inlaid under the tray, folds locked
+   to 8 so it aligns with the 8×8 grid. Static — it never repaints.
+
+   Grown to the full tray (was inset 4%) and lifted to 0.14 (was 0.11). Both for the same
+   reason: the linework got much finer in this pass, and a finer line at a fixed opacity reads
+   fainter, so holding the old numbers would have quietly LOST detail rather than gained it.
+   inset 0 is the largest safe value — the disc is inscribed in this square, so it reaches the
+   tray edge at the mid-points and never spills past the dabba frame. */
+.board-rangoli {
+  position: absolute; inset: 0;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: 0;
+}
+.board-rangoli svg { width: 100%; height: 100%; display: block; }
 .fx-layer { pointer-events: none; z-index: 30; overflow: visible; }
 
 /* golden dabba dividers */
@@ -415,7 +521,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 
 .tile-inner {
   position: absolute; inset: var(--cell-pad);
-  transition: transform 0.15s ease;
+  transition: transform var(--d-micro) var(--e-snap);
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45));
 }
 .tile-inner svg { width: 100%; height: 100%; display: block; }
@@ -464,7 +570,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   position: absolute; border-radius: 6px; z-index: 29;
   background: linear-gradient(90deg, transparent, rgba(255, 224, 138, 0.95), rgba(255, 153, 51, 0.9), rgba(255, 224, 138, 0.95), transparent);
   box-shadow: 0 0 18px rgba(255, 190, 60, 0.9);
-  animation: beamFade 0.45s ease-out forwards;
+  animation: beamFadeH 0.45s var(--e-out) forwards;
 }
 
 .combo-layer { position: fixed; inset: 0; pointer-events: none; z-index: 60; display: grid; place-items: center; }
@@ -513,17 +619,22 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   width: min(92vw, 400px);
   max-height: min(86dvh, 640px);
   overflow-y: auto;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(255, 220, 150, 0.25), transparent 50%),
-    linear-gradient(170deg, #FFF3DC, #FFE3B3);
-  color: #4A1D06;
-  border: 3px solid var(--gold-deep);
-  outline: 2px solid rgba(245, 197, 66, 0.5);
-  outline-offset: 5px;
-  border-radius: 26px;
+  /* pressed paper in a gold cloison, with an inner keyline the way fine stationery is edged */
+  --surface:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 224, 160, 0.28), transparent 50%),
+    linear-gradient(170deg, var(--paper-100), var(--paper-200));
+  color: var(--ink-warm);
+  border: 3px solid transparent;
+  background-image: var(--surface), var(--au-ramp);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-radius: var(--r-5);
   padding: 26px 22px 24px;
   text-align: center;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    var(--cloison),
+    inset 0 0 0 1px rgba(110, 26, 53, 0.12),
+    var(--sh-lift);
   animation: cardPop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
 .overlay-card h2 {
@@ -563,8 +674,8 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
 .goal-panel { background: rgba(122, 30, 60, 0.08); border: 2px dashed rgba(122, 30, 60, 0.35);
   border-radius: 14px; padding: 10px 14px; margin: 10px 0 4px;
   display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.goal-panel-head { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
-  text-transform: uppercase; opacity: 0.6; }
+.goal-panel-head { font-family: var(--font-label); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.18em;
+  text-transform: uppercase; opacity: 0.62; }
 .goal-panel-row { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.05rem; }
 .goal-panel-row svg { width: 30px; height: 30px; }
 .goal-panel-row .goal-icon { font-size: 1.3rem; }
@@ -586,7 +697,7 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   font-family: var(--font-ui);
   font-weight: 800;
   border: none; cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+  transition: transform var(--d-micro) var(--e-snap), box-shadow var(--d-micro) var(--e-snap), filter var(--d-micro) var(--e-snap);
 }
 .btn:active { transform: translateY(3px); }
 
@@ -629,7 +740,6 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
    KEYFRAMES
    ============================================================ */
 @keyframes screenIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-@keyframes rangoliSpin { to { transform: rotate(360deg); } }
 @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-9px) rotate(4deg); } }
 @keyframes flameSway {
   0%   { transform: rotate(-2deg) scale(1, 1); border-radius: 50% 50% 44% 56% / 68% 68% 32% 32%; }
@@ -696,7 +806,14 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   0% { transform: translate(0, 0) scale(1); opacity: 1; }
   100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
 }
-@keyframes beamFade {
+/* The beam must stretch ALONG its travel axis. One shared keyframe scaling Y made the
+   horizontal (row) beam merely thicken instead of shooting down the row. */
+@keyframes beamFadeH {
+  0% { opacity: 0; transform: scaleX(0.4); }
+  25% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(0.7); }
+}
+@keyframes beamFadeV {
   0% { opacity: 0; transform: scaleY(0.4); }
   25% { opacity: 1; transform: scaleY(1); }
   100% { opacity: 0; transform: scaleY(0.7); }
@@ -734,7 +851,9 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
   /* Row 1: navigation + identity. Row 2: the per-turn glance pair (moves + goal). */
   .game-head { flex-wrap: wrap; row-gap: 6px; }
   .btn-back { order: 0; }
-  .hud-level { order: 1; flex: 1 1 0; }
+  /* Basis must FILL row 1 (back 42 + mute 42 + gaps ≈ 96px), otherwise a zero basis lets all
+     five chips shrink onto one line and the city name truncates instead of wrapping. */
+  .hud-level { order: 1; flex: 1 1 calc(100% - 108px); min-width: 0; }
   .game-head .btn-mute { order: 2; }
   .hud-moves { order: 3; flex: 0 0 88px; }
   .hud-goal { order: 4; flex: 1 1 0; justify-content: center; }
@@ -845,8 +964,9 @@ main { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-d
     position: absolute; inset: 0;
     background: radial-gradient(ellipse 54% 60% at 50% 46%, transparent 58%, rgba(10, 3, 18, 0.45) 100%);
   }
-  .rangoli-a { right: -14vmin; }
-  .rangoli-b { left: -16vmin; }
+  /* wide desktops have room to seat the medallions further inside the frame */
+  .rangoli-a { right: -19vmin; }
+  .rangoli-b { left: -20vmin; }
 }
 
 /* W2 — big-desktop HUD: chips scale up to match the 680px board */

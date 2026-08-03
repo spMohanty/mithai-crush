@@ -470,6 +470,7 @@ function beam(kind, i) {
     el.style.top = '0'; el.style.bottom = '0';
     el.style.left = `${c * 12.5 + 3.5}%`; el.style.width = '5.5%';
     el.style.background = 'linear-gradient(180deg, transparent, rgba(255,224,138,.95), rgba(255,153,51,.9), rgba(255,224,138,.95), transparent)';
+    el.style.animationName = 'beamFadeV'; // stretch along the column, not across it
   }
   els.fx.appendChild(el);
   setTimeout(() => el.remove(), 500);
@@ -723,6 +724,8 @@ function startLevel(level, { card = true } = {}) {
   state.board = board;
   els.city.textContent = level.city;
   els.levelno.textContent = `Level ${level.id} · ${level.hindi}`;
+  // this city's floor — folds locked to 8 so the inlay aligns with the 8×8 grid
+  $('#board-rangoli').innerHTML = rangoliSVG(level.id * 2654435761, { mode: 'metal', folds: 8 });
   renderChashni();
   renderBoard();
   updateHUD();
@@ -933,11 +936,11 @@ injectDefs();
 decorateTitle();
 decorateToran();
 refreshTitle();
-// Fresh hand-painted rangoli each visit — two different seeds, like two artists at work.
+// Ambient rangoli: gold-only linework, inlaid rather than printed. Fresh each visit.
 {
   const seed = Math.floor(Math.random() * 2 ** 31);
-  document.querySelector('.rangoli-a').innerHTML = rangoliSVG(seed);
-  document.querySelector('.rangoli-b').innerHTML = rangoliSVG((seed ^ 0x5f3759df) >>> 0);
+  document.querySelector('.rangoli-a').innerHTML = rangoliSVG(seed, { mode: 'metal' });
+  document.querySelector('.rangoli-b').innerHTML = rangoliSVG((seed ^ 0x5f3759df) >>> 0, { mode: 'metal' });
 }
 
 // Dev/testing hook (harmless in production; enables scripted play + state inspection).
